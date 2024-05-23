@@ -1,11 +1,11 @@
 name: CPack
 on:
   push:
-    branches: [master]
+    branches: [branch1]
     tags:
       - "v*.*.*"
   pull_request:
-    branches: [master]
+    branches: [branch1]
     tags:
       - "v*.*.*"
         
