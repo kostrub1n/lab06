@@ -10,6 +10,18 @@ on:
       - "v*.*.*"
         
 jobs:
+  build_Linux:
+
+  runs-on: ubuntu-latest
+
+  steps:
+  - uses: actions/checkout@v4
+
+  - name: Configure Solver
+    run: cmake ${{github.workspace}} -B ${{github.workspace}}/build
+
+  - name: Build Solver
+    run: cmake --build ${{github.workspace}}/build
   release:
     runs-on: ubuntu-latest
     steps:
