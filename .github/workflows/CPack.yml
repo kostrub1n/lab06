@@ -45,7 +45,9 @@ jobs:
       - name: Package with CPack
         run: |
           cd build
+          ls
           cpack
+          ls
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
