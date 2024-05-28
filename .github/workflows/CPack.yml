@@ -1,43 +1,39 @@
 name: CPack
 
 on:
- push:
-   branches: [branch1]
-   tags:
-     - "*.*.*"
+  push:
+    branches: [branch1]
+  pull_request:
+    branches: [branch1]
 
-jobs: 
-
+jobs:
   build_packages_Linux:
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      - name: Config solver
+        run: cmake ${{github.workspace}} -B ${{github.workspace}}/build -D PRINT_VERSION=1.0.0
 
-    - name: Configure Solver
-      run: cmake -B ${{github.workspace}}/.build -D PRINT_VERSION=${{  github.ref_name }}
+      - name: Build solver
+        run: cmake --build ${{github.workspace}}/build
 
-    - name: Build Solver
-      run: cmake --build ${{github.workspace}}/.build
+      - name: Build package
+        run: cmake --build ${{github.workspace}}/build --target package
 
-    - name: Build package
-      run: sudo cmake --build ${{github.workspace}}/.build --target package
+      - name: Build source package
+        run: cmake --build ${{github.workspace}}/build --target package_source
 
-    - name: Build source package
-      run: sudo cmake --build ${{github.workspace}}/.build --target package_source
-
-    - name: Make a release
-      uses: ncipollo/release-action@v1.10.0
-      with:
-        artifacts: ".build/*.deb,.build/*.tar.gz,.build/*.zip"
-        tag: ${{  github.ref_name }}
-    - name: Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: solver
-        path: ${{github.workspace}}/.build/solver
+      - name: Make a release
+        uses: ncipollo/release-action@v1.10.0
+        with:
+          tag: v1.0.0
+          artifacts: "build/*.deb,build/*.tar.gz,build/*.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: solver
+          path: build/solver
