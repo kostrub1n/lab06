@@ -2,6 +2,7 @@ name: CPack
 
 on:
  push:
+   branches: [branch1]
    tags:
      - "*.*.*"
 
