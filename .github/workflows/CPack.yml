@@ -64,5 +64,5 @@ jobs:
       - name: Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: example
-          path: build/example
+          name: solver 
+          path: build/solver
